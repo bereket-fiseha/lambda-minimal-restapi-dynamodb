@@ -10,7 +10,34 @@ def lambda_handler(event, context):
     resource= event['path']
     employeeTable = boto3.resource('dynamodb').Table('employee')
 
-    if(operation=='GET' and resource=='/employee'):
+
+
+
+    if(operation=='GET' and resource=='/employee/{id}'):
+
+            response = employeeTable.get_item(
+                   Key={
+
+                       "id": id
+                   });
+            if 'Item' in response:
+                     return {
+                   "statusCode": 200,
+                   "body":  json.dumps(response['Item'])}
+               
+            else:
+                return {
+                   "statusCode": 400,
+                   "body": json.dumps({"message":"No Item found"})}
+                
+
+
+
+
+
+
+
+    if(operation=='GET' and resource=='/employee' and event['queryStringParameters']['id']!= None):
 
             response = employeeTable.get_item(
                    Key={
